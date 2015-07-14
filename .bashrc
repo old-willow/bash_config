@@ -118,3 +118,4 @@ PATH=$HOME/bin:$PATH
 export PATH
 
 alias tmux="TERM=screen-256color-bce tmux"
+export GREP_OPTIONS='--color=always'
