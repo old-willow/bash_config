@@ -37,13 +37,13 @@ fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color) color_prompt=yes;;
+    xterm-color|*-256color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
-force_color_prompt=yes
+#force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
@@ -56,8 +56,14 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+#export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\] $ "
+
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$: '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\n\[\033[01;32m\]\$(__git_ps1)\[\033[00m] \$: '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -76,9 +82,8 @@ esac
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    alias ll='ls -la --color=auto'
-    alias dir='dir --color=auto'
-    alias vdir='vdir --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
 
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
@@ -92,10 +97,6 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
-
-# alisas for python's simple http server
-alias dummyserver='python -m SimpleHTTPServer 8000'
-
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -121,9 +122,11 @@ export EDITOR=vim
 PATH=$HOME/bin:$PATH
 export PATH
 
-# Added for phpsh (Sep 12, 2015)
-export PYTHONPATH=$HOME/opt/phpsh/lib/python2.7/site-packages
-
 alias tmux="TERM=screen-256color-bce tmux"
 export GREP_OPTIONS='--color=always'
+
+# tmux options
+#if [ -n $TMUX]; then
+#    alias vim="TERM=screen-256color vim"
+#fi
 
